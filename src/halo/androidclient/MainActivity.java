@@ -9,26 +9,31 @@ import java.net.Socket;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.hardware.Camera;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 import android.view.View;
+import android.widget.FrameLayout;
 
 public class MainActivity extends Activity {
 	String clientName = "Android1";
 	public static final int SERVERPORT = 2525;
-	// Computer local address
-	public static final String SERVERIP = "192.168.2.8";
-	Intent i;
+	public static final String SERVERIP = "192.168.2.8";// Computer local address
+	CameraPreview mPreview;
+	Camera mCamera;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-
+		
+		mCamera = getCameraInstances();
+		mPreview = new CameraPreview(this, mCamera);
+		FrameLayout preview = (FrameLayout) findViewById(R.id.camera_preview);
+		preview.addView(mPreview);
 	}
 
 	@Override
@@ -38,13 +43,15 @@ public class MainActivity extends Activity {
 		return true;
 	}
 
-	public void startCamera(View view) { // start camera on click
+	public void startCamera(View view) { 
+		// start camera (Intent)
 		Intent intent = new Intent(this, CameraActivity.class);
 
 		startActivity(intent);
 	}
-	
-	public void startSurfaceCamera(View view){
+
+	public void startSurfaceCamera(View view) {
+		// Start camera (native)
 		Intent intent = new Intent(this, SurfaceCameraActivity.class);
 		startActivity(intent);
 	}
