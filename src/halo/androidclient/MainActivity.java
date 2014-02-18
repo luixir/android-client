@@ -21,7 +21,8 @@ import android.widget.FrameLayout;
 public class MainActivity extends Activity {
 	String clientName = "Android1";
 	public static final int SERVERPORT = 2525;
-	public static final String SERVERIP = "192.168.2.8";// Computer local address
+	public static final String SERVERIP = "192.168.2.8";// Computer local
+														// address
 	CameraPreview mPreview;
 	Camera mCamera;
 
@@ -30,10 +31,55 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
-		mCamera = getCameraInstances();
-		mPreview = new CameraPreview(this, mCamera);
-		FrameLayout preview = (FrameLayout) findViewById(R.id.camera_preview);
-		preview.addView(mPreview);
+		if(mCamera == null){
+			initializeCamera();			
+		}
+	}
+
+	protected void initializeCamera() {
+		if (mCamera == null) {
+			mCamera = getCameraInstances();
+			mPreview = new CameraPreview(this, mCamera);
+			FrameLayout preview = (FrameLayout) findViewById(R.id.camera_preview);
+			preview.addView(mPreview);
+		}
+	}
+	
+	@Override
+	protected void onStart() {
+		super.onStart();
+		if(mCamera == null){
+			initializeCamera();
+		}
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		if (mCamera == null) {
+			initializeCamera();
+		}
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		if(mCamera != null){
+			mCamera.setPreviewCallback(null);
+			mCamera.release();	
+			mCamera = null;
+		}
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		if(mCamera != null){
+			mCamera.setPreviewCallback(null);
+			mCamera.release();	
+			mCamera = null;
+			
+		}
 	}
 
 	@Override
@@ -43,7 +89,7 @@ public class MainActivity extends Activity {
 		return true;
 	}
 
-	public void startCamera(View view) { 
+	public void startCamera(View view) {
 		// start camera (Intent)
 		Intent intent = new Intent(this, CameraActivity.class);
 

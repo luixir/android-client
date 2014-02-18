@@ -40,7 +40,6 @@ public class SurfaceCameraActivity extends Activity implements Runnable {
 	SurfaceHolder.Callback my_callback(){
 		SurfaceHolder.Callback ob1 = new SurfaceHolder.Callback() {
 			
-
             @Override
             public void surfaceDestroyed(SurfaceHolder holder) {
                   mCamera.stopPreview();
