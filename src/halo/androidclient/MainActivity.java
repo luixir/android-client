@@ -30,26 +30,26 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		
-		if(mCamera == null){
-			initializeCamera();			
+
+		if (mCamera == null) {
+			initializeCamera();
 		}
+		Log.d("Banana", "onCreate");
 	}
 
 	protected void initializeCamera() {
-		if (mCamera == null) {
-			mCamera = getCameraInstances();
-			mPreview = new CameraPreview(this, mCamera);
-			FrameLayout preview = (FrameLayout) findViewById(R.id.camera_preview);
-			preview.addView(mPreview);
-		}
+		mCamera = getCameraInstances();
+		mPreview = new CameraPreview(this, mCamera);
+		FrameLayout preview = (FrameLayout) findViewById(R.id.camera_preview);
+		preview.addView(mPreview);
 	}
-	
+
 	@Override
 	protected void onStart() {
 		super.onStart();
-		if(mCamera == null){
+		if (mCamera == null) {
 			initializeCamera();
+			Log.d("Banana", "onStart");
 		}
 	}
 
@@ -58,30 +58,21 @@ public class MainActivity extends Activity {
 		super.onResume();
 		if (mCamera == null) {
 			initializeCamera();
+			Log.d("Banana", "onResume");
 		}
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
-		if(mCamera != null){
-			mCamera.setPreviewCallback(null);
-			mCamera.release();	
+		if (mCamera != null) {
+			mPreview.getHolder().removeCallback(mPreview);
+			mCamera.release();
 			mCamera = null;
+			Log.d("Banana", "onPause");
 		}
 	}
-
-	@Override
-	protected void onStop() {
-		super.onStop();
-		if(mCamera != null){
-			mCamera.setPreviewCallback(null);
-			mCamera.release();	
-			mCamera = null;
-			
-		}
-	}
-
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
